@@ -1,0 +1,141 @@
+<!--- USE WHEN DONE: https://www.maxlaumeister.com/pagecrypt/ --->
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="../resources/styles/style.css" rel="stylesheet">
+    <link href="../resources/styles/adminStyle.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Oswald:wght@200;300;400;500;700&display=swap" rel="stylesheet">
+    <title>Admin Configuration Page</title>
+</head>
+<body>
+<h1 class="admin-heading">Admin Configuration Page</h1>
+
+<div class="admin-create-obj">
+    <h2>Create New Package</h2>
+    <form class="packageForm">
+        <label for="packageName" class="admin-package-prop">Package Name:</label>
+        <input type="text" id="packageName" name="packageName" value="" class="admin-package-field">
+        <label for="packagePrice" class="admin-package-prop">Package Price:</label>
+        <input type="number" id="packagePrice" name="packagePrice" value="(Enter the package's price without a dollar sign)" class="admin-package-field">
+        <label for="packageDuration" class="admin-package-prop">Package Duration:</label>
+        <input type="number" id="packageDuration" name="packageDuration" value="(Enter the package's duration in minutes)" class="admin-package-field">
+        <input type="submit" value="Submit" id='package-submit' class="admin-submitBtn">
+    </form>
+</div>
+
+<div class="admin-create-obj">
+    <h2>Create New Add-on</h2>
+    <form class="addOnForm">
+        <label for="addOnName" class="admin-package-prop">Add-on Name:</label>
+        <input type="text" id="addOnName" name="addOnName" value="" class="admin-package-field">
+        <label for="addOnPrice" class="admin-package-prop">Add-on Price:</label>
+        <input type="number" id="addOnPrice" name="addOnPrice" value="(Enter the add-on's price without a dollar sign)" class="admin-package-field">
+        <label for="addOnDuration" class="admin-package-prop">Add-on Duration:</label>
+        <input type="number" id="addOnDuration" name="addOnDuration" value="(Enter the add-on's duration in minutes)" class="admin-package-field">
+        <input type="submit" value="Submit" id='addOn-submit' class="admin-submitBtn">
+    </form>
+</div>
+
+<div class="admin-create-obj">
+    <h2>Delete Package</h2>
+    <input type="submit" value="Show Current Packages" id='showPackagesSubmit' class="admin-submitBtn">
+</div>
+
+<div class="admin-create-obj">
+    <h2>Delete Add-on</h2>
+    <input type="submit" value="Show Current Add-ons" id='showAddOnsSubmit' class="admin-submitBtn">
+</div>
+
+<div class="admin-create-obj">
+    <h2>General Settings</h2>
+    <form class="settingsForm">
+        <label for="travelBuffer" class="admin-package-prop">Travel Buffer:</label>
+        <input type="number" id="travelBuffer" name="travelBuffer" value="(Enter a travel buffer in minutes)" class="admin-package-field">
+        <label for="concurrentAvailability" class="admin-package-prop">Concurrent Availability:</label>
+        <input type="number" id="concurrentAvailability" name="concurrentAvailability" value="(How many simultaneous appointments can be booked?)" class="admin-package-field">
+        <label for="apptStartTime" class="admin-package-prop">First Available Appointment of Day:</label>
+        <input type="time" id="apptStartTime" name="apptStartTime" value="(Earliest Appointment Time of Day)" class="admin-package-field">
+        <label for="apptEndTime" class="admin-package-prop">Last Available Appointment of Day:</label>
+        <input type="time" id="apptEndTime" name="apptEndTime" value="(Last Appointment Time of Day)" class="admin-package-field">
+        <input type="submit" value="Submit" id="generalSettingsSubmit" class="admin-submitBtn">
+     </form>
+</div>
+
+<div class="admin-create-obj">
+    <h2>Delete an Appointment Slot</h2>
+    <form class="admin-appts-on-day">
+        <label for="dayToGet" class="admin-package-prop">Which Day?</label>
+        <input type="date" id="dayToGet" name="dayToGet" value="" class="admin-package-field">
+        <input type="submit" value="Show Available Appt's" id="apptsOnDaySubmit" class="admin-submitBtn">
+    </form>
+    <!-- ADD NEW FORM TO FINISH SELECTING APPTS TO DELETE FROM DB
+         BASED ON THE APPTS FROM THE DAY SELECTED DIRECTLY ABOVE -->
+</div>
+
+<div class="admin-create-obj">
+    <h2>Restore an Appointment Slot</h2>
+    <form class="admin-deleted-appts-on-day">
+        <label for="deletedDayToGet" class="admin-package-prop">Which Day?</label>
+        <input type="date" id="deletedDayToGet" name="deletedDayToGet" value="" class="admin-package-field">
+        <input type="submit" value="Show Deleted Appt's" id="deletedApptsOnDaySubmit" class="admin-submitBtn">
+    </form>
+    <!-- ADD NEW FORM TO FINISH SELECTING APPTS TO RESTORE FROM DB
+         BASED ON THE APPTS FROM THE DAY SELECTED DIRECTLY ABOVE -->
+</div>
+
+<div class="admin-create-obj">
+    <h2>Block a Day</h2>
+    <form class="admin-block-day">
+        <label for="blockedDay" class="admin-package-prop">Day to Block:</label>
+        <input type="date" id="blockedDay" name="blockedDay" class="admin-package-field">
+        <input type="submit" value="Submit" id="blockDaySubmit" class="admin-submitBtn">
+    </form>
+</div>
+
+<div class="admin-create-obj">
+    <h2>Block a Day Indefinitely</h2>
+    <form class="admin-block-day-ind">
+        <select id="indefinitelyBlockedDay" name="indefinitelyBlockedDay">
+            <option value="sunday">Sunday</option>
+            <option value="monday">Monday</option>
+            <option value="tuesday">Tuesday</option>
+            <option value="wednesday">Wednesday</option>
+            <option value="thursday">Thursday</option>
+            <option value="friday">Friday</option>
+            <option value="saturday">Saturday</option>
+        </select>
+        <input type="submit" value="Submit" id="indefiniteSubmit" class="admin-submitBtn">
+    </form>
+</div>
+
+<div class="admin-create-obj">
+    <h2>Restore Blocked Day</h2>
+    <input type="submit" value="Show Blocked Days" id="showBlockedDaysSubmit" class="admin-submitBtn">
+</div>
+
+<div class="admin-create-obj">
+    <h2>Restore Indefinitely Blocked Day</h2>
+    <input type="submit" value="Show Indefinitely Blocked Days" id="showIndBlockedDaysSubmit" class="admin-submitBtn">
+</div>
+
+<div class="admin-create-obj">
+    <h2 class="admin-appt-gen">Generate Appointments</h2>
+    <p class="admin-p">
+        This button will generate new appointment slots going one year into the
+        future. <span class="important-note">You must FIRST submit the
+        <em>General Settings</em></span> in order for this button to work.
+        This button will not change any appointment slot settings that already
+        exist in the database.
+    </p>
+    <button>Generate Appointments</button>
+</div>
+
+
+<script src="../resources/scripts/adminClient.js"></script>
+</body>
+</html>

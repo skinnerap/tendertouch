@@ -1,0 +1,50 @@
+body {
+    padding: 5vh;
+    text-align: center;
+    color: darkslategrey;
+    background-color: cornsilk;
+}
+
+.admin-heading {
+    text-align: center;
+    margin-bottom: 5vh;
+}
+
+.admin-package-field {
+    display: block;
+    width: 45vh;
+    font-size: 1.1rem;
+}
+
+.admin-package-prop {
+    font-size: 1.4rem;
+}
+
+.admin-submitBtn {
+    margin-top: 2vh;
+}
+
+.admin-create-obj {
+    display: inline-block;
+    margin-right: 5vh;
+    margin-top: 5vh;
+    margin-bottom: 3vh;
+    vertical-align: top;
+}
+
+.admin-p {
+    margin-top: 2vh;
+    text-align: center;
+    padding-left: 5vh;
+    padding-right: 5vh;
+    font-size: 1.2rem;
+}
+
+.admin-create-obj button {
+    padding: 1vh 2vh;
+    margin: 2vh 2vh;
+}
+
+.admin-appt-gen {
+    font-size: 4rem;
+}
