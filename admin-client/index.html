@@ -4,52 +4,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="../resources/styles/style.css" rel="stylesheet">
-    <link href="../resources/styles/adminStyle.css" rel="stylesheet">
+    <link href="../resources/styles/style.css" rel="stylesheet" type="text/css">
+    <link href="../resources/styles/adminStyle.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Oswald:wght@200;300;400;500;700&display=swap" rel="stylesheet">
     <title>Admin Configuration Page</title>
 </head>
 <body>
 <h1 class="admin-heading">Admin Configuration Page</h1>
-
-<div class="admin-create-obj">
-    <h2>Create New Package</h2>
-    <form class="packageForm">
-        <label for="packageName" class="admin-package-prop">Package Name:</label>
-        <input type="text" id="packageName" name="packageName" value="" class="admin-package-field">
-        <label for="packagePrice" class="admin-package-prop">Package Price:</label>
-        <input type="number" id="packagePrice" name="packagePrice" value="(Enter the package's price without a dollar sign)" class="admin-package-field">
-        <label for="packageDuration" class="admin-package-prop">Package Duration:</label>
-        <input type="number" id="packageDuration" name="packageDuration" value="(Enter the package's duration in minutes)" class="admin-package-field">
-        <input type="submit" value="Submit" id='package-submit' class="admin-submitBtn">
-    </form>
-</div>
-
-<div class="admin-create-obj">
-    <h2>Create New Add-on</h2>
-    <form class="addOnForm">
-        <label for="addOnName" class="admin-package-prop">Add-on Name:</label>
-        <input type="text" id="addOnName" name="addOnName" value="" class="admin-package-field">
-        <label for="addOnPrice" class="admin-package-prop">Add-on Price:</label>
-        <input type="number" id="addOnPrice" name="addOnPrice" value="(Enter the add-on's price without a dollar sign)" class="admin-package-field">
-        <label for="addOnDuration" class="admin-package-prop">Add-on Duration:</label>
-        <input type="number" id="addOnDuration" name="addOnDuration" value="(Enter the add-on's duration in minutes)" class="admin-package-field">
-        <input type="submit" value="Submit" id='addOn-submit' class="admin-submitBtn">
-    </form>
-</div>
-
-<div class="admin-create-obj">
-    <h2>Delete Package</h2>
-    <input type="submit" value="Show Current Packages" id='showPackagesSubmit' class="admin-submitBtn">
-</div>
-
-<div class="admin-create-obj">
-    <h2>Delete Add-on</h2>
-    <input type="submit" value="Show Current Add-ons" id='showAddOnsSubmit' class="admin-submitBtn">
-</div>
 
 <div class="admin-create-obj">
     <h2>General Settings</h2>
@@ -63,9 +26,79 @@
         <label for="apptEndTime" class="admin-package-prop">Last Available Appointment of Day:</label>
         <input type="time" id="apptEndTime" name="apptEndTime" value="(Last Appointment Time of Day)" class="admin-package-field">
         <input type="submit" value="Submit" id="generalSettingsSubmit" class="admin-submitBtn">
-     </form>
+    </form>
+    <div class='submission-success' id='settings-submission'></div>
+    <h2>Current Settings:</h2>
+    <p class="currentSettings">
+        Travel Buffer: <span id="currentTB"></span>
+    </p>
+    <p class="currentSettings">
+        Teams Available: <span id="currentCA"></span>
+    </p>
+    <p class="currentSettings">
+        Open Time: <span id="currentST"></span>
+    </p>
+    <p class="currentSettings">
+        Last Appointment Time of Day: <span id="currentET"></span>
+    </p>
 </div>
 
+<div class="admin-create-obj">
+    <h2>Create New Package</h2>
+    <form class="packageForm">
+        <label for="packageName" class="admin-package-prop">Package Name:</label>
+        <input type="text" id="packageName" name="packageName" value="" class="admin-package-field">
+        <label for="packagePrice" class="admin-package-prop">Package Price:</label>
+        <input type="number" id="packagePrice" name="packagePrice" value="" class="admin-package-field">
+        <label for="packageDuration" class="admin-package-prop">Package Duration:</label>
+        <input type="number" id="packageDuration" name="packageDuration" value="" class="admin-package-field">
+        <input type="submit" value="Submit" id='package-submit' class="admin-submitBtn">
+    </form>
+    <div class='submission-success' id='package-submission'></div>
+</div>
+
+<div class="admin-create-obj">
+    <h2>Create New Add-on</h2>
+    <form class="addOnForm">
+        <label for="addOnName" class="admin-package-prop">Add-on Name:</label>
+        <input type="text" id="addOnName" name="addOnName" value="" class="admin-package-field">
+        <label for="addOnPrice" class="admin-package-prop">Add-on Price:</label>
+        <input type="number" id="addOnPrice" name="addOnPrice" value="" class="admin-package-field">
+        <label for="addOnDuration" class="admin-package-prop">Add-on Duration:</label>
+        <input type="number" id="addOnDuration" name="addOnDuration" value="" class="admin-package-field">
+        <input type="submit" value="Submit" id='addOn-submit' class="admin-submitBtn">
+    </form>
+    <div class='submission-success' id='addon-submission'></div>
+</div>
+
+<div class="admin-create-obj">
+    <h2>Delete Package</h2>
+    <input type="submit" value="Show Current Packages" id='showPackagesSubmit' class="admin-submitBtn">
+     <form class="packagesToDelete">
+        <select class="showPackages">
+            <!-- Insert all packages on click -->
+        </select>
+     </form>
+    <div class="deletePackage">
+        <!-- Insert the button to delete a package when packages are loaded by admin -->
+    </div>
+    <div class='submission-success' id='package-delete-submission'></div>
+</div>
+
+<div class="admin-create-obj">
+    <h2>Delete Add-on</h2>
+    <input type="submit" value="Show Current Add-ons" id='showAddOnsSubmit' class="admin-submitBtn">
+    <form class="addOnsToDelete">
+        <select class="showAddOns">
+            <!-- Insert all packages on click -->
+        </select>
+    </form>
+    <div class="deleteAddOn">
+        <!-- Insert the button to delete a package when packages are loaded by admin -->
+    </div>
+    <div class='submission-success' id='addon-delete-submission'></div>
+</div>
+<!-- Future Feature
 <div class="admin-create-obj">
     <h2>Delete an Appointment Slot</h2>
     <form class="admin-appts-on-day">
@@ -73,33 +106,39 @@
         <input type="date" id="dayToGet" name="dayToGet" value="" class="admin-package-field">
         <input type="submit" value="Show Available Appt's" id="apptsOnDaySubmit" class="admin-submitBtn">
     </form>
-    <!-- ADD NEW FORM TO FINISH SELECTING APPTS TO DELETE FROM DB
-         BASED ON THE APPTS FROM THE DAY SELECTED DIRECTLY ABOVE -->
-</div>
 
+    <select class="appts-to-delete">
+        --><!-- DISPLAYED APPOINTMENT SLOTS FOR A GIVEN DAY GO HERE ---><!--
+    </select>
+    <div class="deleteApptBtn">-->
+        <!--- INSERT A BUTTON TO DELETE A SELECTED APPOINTMENT SLOT ---><!--
+    </div>
+</div>-->
+<!--
 <div class="admin-create-obj">
     <h2>Restore an Appointment Slot</h2>
     <form class="admin-deleted-appts-on-day">
         <label for="deletedDayToGet" class="admin-package-prop">Which Day?</label>
         <input type="date" id="deletedDayToGet" name="deletedDayToGet" value="" class="admin-package-field">
         <input type="submit" value="Show Deleted Appt's" id="deletedApptsOnDaySubmit" class="admin-submitBtn">
-    </form>
+    </form>-->
     <!-- ADD NEW FORM TO FINISH SELECTING APPTS TO RESTORE FROM DB
-         BASED ON THE APPTS FROM THE DAY SELECTED DIRECTLY ABOVE -->
-</div>
-
+         BASED ON THE APPTS FROM THE DAY SELECTED DIRECTLY ABOVE --><!--
+</div>-->
 <div class="admin-create-obj">
-    <h2>Block a Day</h2>
+    <h2>Block a Date of the Year</h2>
     <form class="admin-block-day">
         <label for="blockedDay" class="admin-package-prop">Day to Block:</label>
         <input type="date" id="blockedDay" name="blockedDay" class="admin-package-field">
         <input type="submit" value="Submit" id="blockDaySubmit" class="admin-submitBtn">
     </form>
+    <div class='submission-success' id='blockedDay-submission'></div>
+    <div class='submission-message' id='blockedDay-submission-message'></div>
 </div>
 
 <div class="admin-create-obj">
-    <h2>Block a Day Indefinitely</h2>
-    <form class="admin-block-day-ind">
+    <h2>Block a Day of the Week</h2>
+    <form class="showIndBlockedDaysSubmit">
         <select id="indefinitelyBlockedDay" name="indefinitelyBlockedDay">
             <option value="sunday">Sunday</option>
             <option value="monday">Monday</option>
@@ -111,31 +150,139 @@
         </select>
         <input type="submit" value="Submit" id="indefiniteSubmit" class="admin-submitBtn">
     </form>
+    <div class='submission-success' id='indBlockedDay-submission'></div>
+    <div class='submission-message' id='indBlockedDay-submission-message'></div>
 </div>
 
 <div class="admin-create-obj">
-    <h2>Restore Blocked Day</h2>
+    <h2>Restore Blocked Date</h2>
     <input type="submit" value="Show Blocked Days" id="showBlockedDaysSubmit" class="admin-submitBtn">
+    <select class="restoreBlockedDaysOptions">
+        <!-- INSERT BLOCKED DAYS FROM DB -->
+    </select>
+    <div class="restoreBdays">
+
+    </div>
+    <div class='submission-success' id='blockedDay-restore-submission'></div>
 </div>
 
 <div class="admin-create-obj">
     <h2>Restore Indefinitely Blocked Day</h2>
     <input type="submit" value="Show Indefinitely Blocked Days" id="showIndBlockedDaysSubmit" class="admin-submitBtn">
+    <select class="restoreIndBlockedDaysOptions">
+        <!-- INSERT INDEFINITELY BLOCKED DAYS FROM DB -->
+    </select>
+    <div class="restoreIndBdays">
+
+    </div>
+    <div class='submission-success' id='indBlockedDay-restore-submission'></div>
 </div>
 
 <div class="admin-create-obj">
-    <h2 class="admin-appt-gen">Generate Appointments</h2>
+    <h2>CREATE APPOINTMENTS</h2>
+    <button class="admin-submitBtn" id="create-appts">GENERATE APPOINTMENT AVAILABILITY</button>
+    <div class='submission-success' id='appt-create-submission'></div>
     <p class="admin-p">
-        This button will generate new appointment slots going one year into the
-        future. <span class="important-note">You must FIRST submit the
-        <em>General Settings</em></span> in order for this button to work.
-        This button will not change any appointment slot settings that already
-        exist in the database.
+        When you click the button above the following happens:
     </p>
-    <button>Generate Appointments</button>
+    <ul class="admin-gen-text">
+        <li>The settings you created are fetched from the database, this includes
+        blocked dates/days of the week.</li>
+        <li>Next, the algorithm uses all of this information to create your
+        appointment availability. For now, your appointments are spaced out
+        by 30 minute intervals. This may change in the future as if it is a
+        requested enough feature I will come back and add a custom interval
+        property to the general settings.</li>
+        <li>Your appointment slots will then be inserted and saved into a
+        database. I have used a no sql database, specifically mongoDb. Don't
+        worry about this if you are not a tech person, just know it is very
+        efficient, fast, and I can expand it's abilities in the future should
+        requests come in!</li>
+        <li>That's it! Now you have successfully stored all of your appointment
+        slots that will be utilized by your website to dynamically assign
+        your companies availability throughout your working days!</li>
+    </ul>
+</div>
+
+<div class="admin-create-obj">
+    <h2 class="admin-appt-gen">Helpful Notes</h2>
+    <p class="admin-p">
+        I created this scheduling software to include all the information you will need
+        to automate the mapping of your availability, and the booking of your services.
+        I have included some useful notes below to help you understand how all of the
+        configuration settings work. Let me begin my giving a general break-down of how
+        the software works:
+    </p>
+    <h2 class="admin-appt-gen">General Breakdown</h2>
+    <p class="admin-p">
+        When a potential customer loads your website this software will immediately
+        generate your appointment availability based on the settings that you have
+        configured above. Your appointment slots are spaced out by 30 minutes. When
+        a customer books an appointment slot (finishes checking out) that slot and
+        all slots that are inside of the range of time your booked appointment will
+        last will have it's property called 'Teams Available' be decremented by one.
+        This is useful as it allows your business to grow and expand your availability
+        on demand. If you are booking appointments for yourself, meaning you have no
+        employees that are handling the services, you would want your 'Teams Available'
+        property to be set to "1". In this scenario when an appointment gets booked the
+        appointment slot itself and all appointment slots inside of the range of time for
+        that booked appointment will be erased completely. This is because your 'Teams
+        Available' property dropped to zero.
+    </p>
+    <h2 class="admin-appt-gen">How to Define When Appt's Start/Stop</h2>
+    <p class="admin-p">
+        You define your availability with a start hour and last hour. This defines the
+        first available appointment of your business day and the last available appointment
+        of your business day respectively.
+    </p>
+    <h2 class="admin-appt-gen">What is Travel Buffer?</h2>
+    <p class="admin-p">
+        <em class="des">Value in Minutes</em>
+        A 'Travel Buffer' allows a mobile business to allow for traffic and other unforeseen
+        circumstances that are a reality of the industry. Set this property in minutes to
+        add extra padding in-between booked appointments and available appointment slots
+        that follow. If your business is not mobile you can set the 'Travel Buffer' to 0,
+        or even just use it as a break time in-between appointment bookings.
+    </p>
+
+    <h2 class="admin-appt-gen">Blocking Days Indefinitely</h2>
+    <p class="admin-p">
+        <em class="des">Value is a day of the week</em>
+        This setting is for blocking a day of the week for the on going future, until you
+        decide to restore it. An example use-case would be if you would like to have
+        weekends off for your business you would use this setting to block saturday and
+        sunday.
+    </p>
+
+    <h2 class="admin-appt-gen">Blocking Dates</h2>
+    <p class="admin-p">
+        <em class="des">Value is a date (Year / Month / Day)</em>
+        This setting is for blocking a specific date, such as a holiday or maybe a
+        vacation for your business. Your appointments are generated for 2 years out
+        whenever a user loads your website, therefore I recommend blocking all the
+        important holidays you wish to be closed on for at least the next 3 years.
+        This means you should block Christmas and Christmas Eve for the next 3 years
+        assuming you want those dates off. I did not pre-set any blocked dates, as to
+        allow you to fully customize your availability.
+    </p>
+</div>
+
+<div class="admin-create-obj">
+    <h2>Rights and Usage</h2>
+    <p>Author: Alexander Paul Skinner</p>
+    <p>Date: 07/17/2020</p>
+    <p>Location: Richmond, VA</p>
+    <p>Version: 1.0.0</p>
+    <p class="admin-p">
+        This software is built, maintained, and 100% owned by Alexander Paul Skinner.
+        Any usage of this software is through sole permission from the owner, Alexander
+        Paul Skinner. Alexander Paul Skinner reserves the rights to make any edits,
+        changes, upgrades, developments, or adjustments to this software of any kind at
+        any time now, or in the future.
+    </p>
 </div>
 
 
-<script src="../resources/scripts/adminClient.js"></script>
+<script src="admin.js"></script>
 </body>
 </html>

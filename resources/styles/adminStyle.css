@@ -1,35 +1,67 @@
 body {
     padding: 5vh;
     text-align: center;
-    color: darkslategrey;
-    background-color: cornsilk;
+    color: #343434;
+    background-image: linear-gradient(to bottom right, #02AAB0, #00CDAC);
+    height: auto;
+    font-size: 24px;
+}
+
+h1 {
+    color: white;
+    font-weight: 300;
+}
+
+h2 {
+    font-weight: 400;
+}
+
+h1, h2 {
+    text-transform: uppercase;
+    font-size: 2.5rem;
+}
+
+select {
+    align-items: center;
 }
 
 .admin-heading {
     text-align: center;
-    margin-bottom: 5vh;
+    margin-bottom: 1vh;
 }
 
 .admin-package-field {
     display: block;
-    width: 45vh;
     font-size: 1.1rem;
+    width: 100%;
 }
 
 .admin-package-prop {
-    font-size: 1.4rem;
+    font-size: 2rem;
 }
 
 .admin-submitBtn {
     margin-top: 2vh;
+    margin-bottom: 2vh;
+    color: #fff;
+    background-image: linear-gradient(to left, #FF416C, #ff0034);
+    padding: 1vh 1.5vh;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 .2rem 1rem rgba(253, 28, 130, 0.8);
+
 }
 
 .admin-create-obj {
     display: inline-block;
-    margin-right: 5vh;
-    margin-top: 5vh;
-    margin-bottom: 3vh;
+    margin: 5vh 2vh 3vh;
     vertical-align: top;
+    width: 50%;
+    background-image: linear-gradient(to top left, #dbfadb, #ffffff);
+    padding: 6vh;
+    border-radius: 20px;
+    border: 2px solid #bcefe8;
+    box-shadow: 0 1rem 2rem rgba(37, 215, 173, 0.8);
 }
 
 .admin-p {
@@ -37,7 +69,8 @@ body {
     text-align: center;
     padding-left: 5vh;
     padding-right: 5vh;
-    font-size: 1.2rem;
+    margin-bottom: 5vh;
+    font-size: 1.5rem;
 }
 
 .admin-create-obj button {
@@ -46,5 +79,78 @@ body {
 }
 
 .admin-appt-gen {
-    font-size: 4rem;
+    font-size: 2.5rem;
+}
+
+.admin-gen-text {
+    font-size: 1.5rem;
+    font-weight: 300;
+}
+
+.prop {
+    font-weight: 400;
+}
+
+.des {
+    display: block;
+}
+
+ul {
+    margin-top: 2vh;
+}
+.admin-li {
+    list-style: none;
+}
+
+.delBtn {
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+}
+
+.submission-success {
+    display: block;
+    margin: 0 auto;
+    width: 15px;
+    height: 15px;
+    background-color: #e3f8e3;
+    border-radius: 50px;
+}
+
+.submission-message {
+    font-size: 1.3rem;
+    text-transform: uppercase;
+}
+
+@media all and (max-width: 800px) {
+    .admin-create-obj {
+        width: 70%;
+    }
+}
+
+@media all and (max-width: 600px) {
+    .admin-create-obj {
+        width: 80%;
+    }
+}
+
+@media all and (max-width: 500px) {
+    .admin-create-obj {
+        width: 85%;
+    }
+
+    .admin-appt-gen {
+        font-size: 2rem;
+    }
+
+    .admin-p {
+        padding: 0;
+    }
+
+    .currentSettings {
+        font-size: 1.5rem;
+    }
+
+    h2, h3 {
+        font-size: 2.3rem;
+    }
 }
