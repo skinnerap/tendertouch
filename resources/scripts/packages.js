@@ -16,11 +16,22 @@ let packageChoice = document.querySelectorAll('.package-choice');
 packageChoice.forEach(el => {
     el.addEventListener('click', () => {
         console.log(el.textContent.trim());
+        if(document.querySelector('._orderContainer') !== null) {
+            document.querySelector('._orderContainer').innerHTML = '';
+        }
+
+
         if(el.textContent.trim() === 'General Wash') {
             console.log('hi');
             packageName.textContent = el.textContent;
             packagePrice.textContent = '$40 (Car) / $60 (Truck/SUV)';
             packageText.innerHTML = `
+                <h5 class='user-packer-choice'> Select Vehicle </h5>
+
+                <a href='#customer-schedule'><button class='btn' id='Car'>Car</button></a>
+                <a href='#customer-schedule'><button class='btn' id='Truck'>Truck</button></a>
+                <a href='#customer-schedule'><button class='btn' id='SUV'>SUV / Van</button></a>
+
                 <li class='package-item'>
                     Interior Vacuum
                 </li>
@@ -54,11 +65,19 @@ packageChoice.forEach(el => {
                 <li class='package-item'>
                     Windows
                 </li>
+                <h4 class='wantAddons'>Add Optional Upgrades</h4>
+
+                <form class='addOn-form' id='addOn-form-generalwash'></form>
             `;
         } else if(el.textContent.trim() == 'Exterior Detail') {
             packageName.textContent = el.textContent;
             packagePrice.textContent = '$100 (Car) / $125 (Truck/SUV)';
             packageText.innerHTML = `
+                <h5 class='user-packer-choice'> Select Vehicle </h5>
+
+                <button class='btn' id='Car'>Car</button>
+                <button class='btn' id='Truck'>Truck</button>
+                <button class='btn' id='SUV'>SUV / Van</button>
                 <li class='package-item'>
                     <em>General Wash Package</em> + the following:
                 </li>
@@ -74,11 +93,19 @@ packageChoice.forEach(el => {
                 <li class='package-item'>
                     Engine Compartment Cleaned
                 </li>
+                <h4 class='wantAddons'>Add Optional Upgrades</h4>
+
+                <form class='addOn-form' id='addOn-form-exteriordetail'></form>
             `;
         } else if(el.textContent.trim() == 'Interior Detail') {
             packageName.textContent = el.textContent;
             packagePrice.textContent = '$100 (Car) / $125 (Truck/SUV)';
             packageText.innerHTML = `
+                <h5 class='user-packer-choice'> Select Vehicle </h5>
+
+                <button class='btn' id='Car'>Car</button>
+                <button class='btn' id='Truck'>Truck</button>
+                <button class='btn' id='SUV'>SUV / Van</button>
                 <li class='package-item'>
                     <em>General Wash</em> + the following:
                 </li>
@@ -94,11 +121,19 @@ packageChoice.forEach(el => {
                 <li class='package-item'>
                     Shampoo Carpets and Seats
                 </li>
+                <h4 class='wantAddons'>Add Optional Upgrades</h4>
+
+                <form class='addOn-form' id='addOn-form-interiordetail'></form>
             `;
         } else if(el.textContent.trim() == 'Full Detail') {
             packageName.textContent = el.textContent;
             packagePrice.textContent = '$160 (Car) / $180 (Truck/SUV)';
             packageText.innerHTML = `
+                <h5 class='user-packer-choice'> Select Vehicle </h5>
+
+                <button class='btn' id='Car'>Car</button>
+                <button class='btn' id='Truck'>Truck</button>
+                <button class='btn' id='SUV'>SUV / Van</button>
                 <li class='package-item'>
                     <em>General Wash Package</em> + the following:
                 </li>
@@ -126,6 +161,10 @@ packageChoice.forEach(el => {
                 <li class='package-item'>
                     Shampoo Carpets and Seats
                 </li>
+
+                <!-- THIS PACKAGE HAS NO ADDONS -->
+
+                <form class='addOn-form' id='addOn-form-fulldetail'></form>
             `;
         }
     });

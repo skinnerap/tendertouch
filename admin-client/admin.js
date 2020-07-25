@@ -54,6 +54,9 @@ function ApptSlot(year, month, dayOfMonth, hour, concurrency) {
     this.hour = hour;
     this.concurrency = concurrency;
     this.date = this.year.toString() + '-' + this.month.toString() + '-' + this.dayOfMonth.toString();
+    this.dateObj = new Date(this.year, this.month - 1, this.dayOfMonth);
+    this.dayOfWeek = this.dateObj.getDay();
+    
 }
 
 
@@ -154,8 +157,6 @@ async function displaySettings() {
 
     // Returns an object with the general settings properties
     const obj = await getSettings();
-
-    console.log(obj);
 
     // If not all general setting properties are set
     // tell Admin to set them
@@ -278,7 +279,7 @@ async function displayPackages() {
         const opt = delForm.options[delForm.selectedIndex];
         
         const confirm = document.querySelector('#package-delete-submission');
-        console.log(confirm);
+
         // Remove it from the DB
         try {
             // Try to delete
@@ -476,6 +477,11 @@ createNewBlockedDate.addEventListener('click', async (event) => {
 
     } else {
 
+        // Update the Concurrency to '0' in the DB for all Appointment Slots on this Date
+        const settingObj = await getSettings();
+        await blockAppointmentSlotRange(blockDayObj.date, settingObj.st, settingObj.et);
+
+        // Post the blocked date to it's collection in the DB
         fetch(API_URL_BLOCKDAY, {
             method: 'POST',
             body: JSON.stringify(blockDayObj),
@@ -544,12 +550,16 @@ async function displayBlockedDates() {
 
     div.innerHTML = `<button class='delBtn' id='restoreBlockedDaySubmit'>RESTORE DATE</button>`;
     const deleteDate = document.querySelector('#restoreBlockedDaySubmit');
-    deleteDate.addEventListener('click', () => {
+    deleteDate.addEventListener('click', async () => {
 
-        // Get Selected Day
+        // Get Selected Date
         const opt = dateContainer.options[dateContainer.selectedIndex];
 
         const confirm = document.querySelector('#blockedDay-restore-submission');
+
+        // Restore the concurrency on all appt slots on this date
+        const settings = await getSettings();
+        await restoreAppointmentSlotRange(opt.value, settings.st, settings.et);
 
         // Try to Delete the Blocked Date
         try {
@@ -589,8 +599,20 @@ createNewBlockedDayOfWeek.addEventListener('click', async (event) => {
     const day = (indBlockForm.options[indBlockForm.selectedIndex].value).toString();
     const type = 'blockedDay';
 
+    const daysIndexed = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+    let dayNumbered = '';
+
+    if(day === daysIndexed[0]) dayNumbered = '0';
+    if(day === daysIndexed[1]) dayNumbered = '1';
+    if(day === daysIndexed[2]) dayNumbered = '2';
+    if(day === daysIndexed[3]) dayNumbered = '3';
+    if(day === daysIndexed[4]) dayNumbered = '4';
+    if(day === daysIndexed[5]) dayNumbered = '5';
+    if(day === daysIndexed[6]) dayNumbered = '6';
+
     const blockedDayObj = {
         day,
+        dayNumbered,
         type
     }
 
@@ -614,6 +636,9 @@ createNewBlockedDayOfWeek.addEventListener('click', async (event) => {
         }, 3000);
 
     } else {
+
+        // UPDATE THE CONCURRENCY TO 0 FOR ALL BLOCKED DAYS OF THE WEEK
+        await blockAppointmentSlotsOnDayOfWeek(blockedDayObj.dayNumbered);
 
         try {
             fetch(API_URL_BLOCKDAYIND, {
@@ -674,10 +699,7 @@ async function displayBlockedDaysOfWeek() {
 
     let html = '';
     const dayContainer = document.querySelector('.restoreIndBlockedDaysOptions');
-    const days = await getBlockedDaysOfWeek();
-
-    console.log(days);
-    
+    const days = await getBlockedDaysOfWeek();  
 
     days.forEach(d => {
         html += `<option id="${d._id}" name="${d._id}">${d.day}</option>`;
@@ -690,11 +712,32 @@ async function displayBlockedDaysOfWeek() {
     const deleteBlockedDay = document.querySelector('#restoreIndBlockedDaySubmit');
 
     const confirm = document.querySelector('#indBlockedDay-restore-submission');
-    console.log(confirm);
 
-    deleteBlockedDay.addEventListener('click', () => {
+    deleteBlockedDay.addEventListener('click', async () => {
 
         const opt = dayContainer.options[dayContainer.selectedIndex];
+
+        const daysIndexed = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+        let dayNumbered = '';
+
+        if(opt.value === daysIndexed[0]) dayNumbered = '0';
+        if(opt.value === daysIndexed[1]) dayNumbered = '1';
+        if(opt.value === daysIndexed[2]) dayNumbered = '2';
+        if(opt.value === daysIndexed[3]) dayNumbered = '3';
+        if(opt.value === daysIndexed[4]) dayNumbered = '4';
+        if(opt.value === daysIndexed[5]) dayNumbered = '5';
+        if(opt.value === daysIndexed[6]) dayNumbered = '6';
+
+        // Updates the concurrency for restored days of the week
+        const currentConcurrency = await getCurrentConcurrency();
+
+        try {
+            fetch(API_URL_APPTSLOTS + '/' + dayNumbered + '/' + currentConcurrency, {
+                method: 'PATCH'
+            });
+        } catch {
+            console.log('Error: Unable to update concurrency on restored days of the week');
+        }
 
         try {
             fetch(API_URL_BLOCKDAYIND + '/' + opt.id, {
@@ -765,7 +808,6 @@ async function createAppointments() {
     // If appointment slots are already stored delete them first
     if(await apptsAreStored()) {
         await deleteAppts();
-        console.log('Appointment Slots Deleted...')
     }
 
     // Settings used to create appointment slots
@@ -814,6 +856,7 @@ async function createAppointments() {
                     //console.log('--------------------');
                     // Check if date or day is blocked
                     const thisDay = new Date(i, j, k);
+                    
 
                     const thisDaysYear = thisDay.toISOString().slice(0,4);
                     const _y = parseInt(thisDay.toISOString().slice(5,7));
@@ -825,8 +868,16 @@ async function createAppointments() {
                     }
                     const thisDaysMonth = _z;
 
+                    let thisDaysDay = '';
+
                     let _x = parseInt(thisDay.toISOString().slice(8,10));
-                    const thisDaysDay = _x.toString();
+                    let _xx = '';
+                    if(_x < 10) {
+                        thisDaysDay = '0' + _x.toString();
+                    } else {
+                        thisDaysDay = _x.toString();
+                    }
+                    
                     const thisDate = thisDaysYear + '-' + thisDaysMonth + '-' + thisDaysDay;
 
                     let mon = '';
@@ -839,13 +890,13 @@ async function createAppointments() {
                     // If this is not a blocked date or blocked day of week
                     if((bSet.has(thisDate) || blockedDaysOfWeekSet.has(thisDay.getDay()))) {
                         // Setting available appointment slot
-                        const a = new ApptSlot(i, mon, k, m, 0);
+                        const a = new ApptSlot(i, mon, thisDaysDay, m, 0);
                         appointmentArr.push(a);
                     // If it is a blocked date or blocked day of week
                     } else {
                         // Setting 'Concurrency' to zero to indicate the appointment is
                         // blocked and therefore unavailable
-                        const a = new ApptSlot(i, mon, k, m, concurrency);
+                        const a = new ApptSlot(i, mon, thisDaysDay, m, concurrency);
                         appointmentArr.push(a);
                     }
 
@@ -859,8 +910,6 @@ async function createAppointments() {
         yearArr.push(monthArr);
         monthArr = [];
     }
-
-    console.log(yearArr);
 
     let result = [];
 
@@ -877,7 +926,8 @@ async function createAppointments() {
                         day: a.dayOfMonth.toString(),
                         month: a.month.toString(),
                         year: a.year.toString(),
-                        concurrency: a.concurrency.toString()
+                        concurrency: a.concurrency.toString(),
+                        dayOfWeek: a.dayOfWeek.toString()
 
                     }
 
@@ -948,7 +998,101 @@ async function deleteAppts() {
     }   
 }
 
+// UPDATES THE CONCURRENCY OF AN APPOINTMENT SLOT WHEN BLOCKED
+async function blockAppointmentSlot(date, hour) {
 
+    // Important Note: The logic for decrementing the appointments concurrency is on the 
+    //                 server side. Therefore I set the passed concurrency to '1' if the 
+    //                 appointment slot is already at 1 or less. This is all a means to 
+    //                 never allow an appointment's concurrency to drop below 0.
+
+    let concurrency = '1';
+    
+    try {
+        await fetch(API_URL_APPTSLOTS + '/' + date + '/' + hour + '/' + concurrency, {
+            method: 'PATCH'
+        });
+    } catch {
+        console.log('Error: Could not update appointment slot');
+    }   
+
+}
+
+// UPDATES THE CONCURRENCY ON A RANGE OF APPOINTMENT SLOTS WHEN BLOCKED
+async function blockAppointmentSlotRange(date, startHour, endHour) {
+
+    for(let currentHour = parseInt(startHour); currentHour <= parseInt(endHour); currentHour += .5) {
+
+        await blockAppointmentSlot(date, currentHour);
+
+    }
+
+}
+
+// UPDATES THE CONCURRENCY OF AN APPOINTMENT SLOT WHEN RESTORED
+async function restoreAppointmentSlot(date, hour) {
+
+    // Important Note:  I will be using the block appointment route and pass in
+    //                  a concurrency that is 1 more than the settings.concurrency
+    //                  and allowing the route to decrement it down to the desired value
+
+    const settings = await getSettings();
+    const concurrency = (parseInt(settings.ca) + 1).toString();
+    
+    try {
+        await fetch(API_URL_APPTSLOTS + '/' + date + '/' + hour + '/' + concurrency, {
+            method: 'PATCH'
+        });
+    } catch {
+        console.log('Error: Could not update appointment slot');
+    }     
+
+}
+
+// UPDATES THE CONCURRENCY ON A RANGE OF APPOINTMENT SLOTS WHEN RESTORED
+async function restoreAppointmentSlotRange(date, startHour, endHour) {
+
+    for(let currentHour = parseInt(startHour); currentHour <= parseInt(endHour); currentHour += .5) {
+
+        await restoreAppointmentSlot(date, currentHour);
+
+    }    
+
+}
+
+// UPDATES THE CONCURRENCY TO 0 ON A BLOCKED DAY OF THE WEEK
+async function blockAppointmentSlotsOnDayOfWeek(dayOfWeek) {
+
+    try {
+        await fetch(API_URL_APPTSLOTS + '/' + dayOfWeek, {
+            method: 'PATCH'
+        });
+    } catch {
+        console.log('Error: Unable to update database with blocked day of the week.');
+    }
+
+}
+
+// UPDATES THE CONCURRENCY TO THE SETTINGS.CONCURRENCY VALUE FOR RESTORED DAYS OF THE WEEK
+async function restoreAppointmentSlotsOnDayOfWeek(dayOfWeek, concurrency) {
+
+    try {
+        await fetch(API_URL_APPTSLOTS + '/' + dayOfWeek + '/' + concurrency, {
+            method: 'PATCH'
+        });
+    } catch {
+        console.log('Error: Unable to update database with blocked day of the week.');
+    }
+
+}
+
+async function getCurrentConcurrency() {
+
+    const settings = await getSettings();
+
+    return settings.ca;
+
+}
 
 
 

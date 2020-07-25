@@ -7,6 +7,7 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Oswald:wght@200;300;400;500;700&display=swap" rel="stylesheet">
     <link href="../resources/styles/style.css" type="text/css" rel="stylesheet">
+    <link href='../resources/styles/client.css' type='text/css' rel='stylesheet'>
 </head>
 <body>
 <div class="navi-btn">
@@ -22,13 +23,13 @@
             <a href="#" class="navi-link tracking-in-contract-bck" id="home-link">Home</a>
         </li>
         <li class="navi-item">
-            <a href="#" class="navi-link tracking-in-contract-bck">Packages</a>
+            <a href="#start-scheduling" class="navi-link tracking-in-contract-bck">Packages</a>
         </li>
         <li class="navi-item">
-            <a href="#" class="navi-link tracking-in-contract-bck">Schedule</a>
+            <a href="#start-scheduling" class="navi-link tracking-in-contract-bck">Schedule</a>
         </li>
         <li class="navi-item">
-            <a href="#" class="navi-link tracking-in-contract-bck">More Info</a>
+            <a href="#info-link" class="navi-link tracking-in-contract-bck">More Info</a>
         </li>
         <li class="navi-item">
             <a href="#" class="navi-link tracking-in-contract-bck">Contact</a>
@@ -103,7 +104,7 @@
     </div>
 
     <div class="primary-btn-box">
-        <a href="#" class="btn btn-orange">Schedule Service</a>
+        <a href="#start-scheduling" class="btn btn-orange main-btn">Schedule Service</a>
     </div>
 
     <div class="subheading-box">
@@ -120,7 +121,7 @@
 </header>
 
 
-<div class="info-title-box">
+<div class="info-title-box" id='info-link'>
     <h3>Easy Online Scheduling</h3>
 </div>
 
@@ -157,7 +158,7 @@
 <section class="package-page">
     <div class="package-container">
     <div class="row">
-        <h4 class="package-title">Package Details</h4>
+        <h4 class="package-title" id='start-scheduling'>Package Details</h4>
     </div>
     <div class="row">
         <p class="package-instruction">
@@ -168,18 +169,19 @@
         </p>
         <div class="row">
             <div class="package-buttons">
-                <a href="#package-details"><button class="package-choice interior">
+                <a href="#package-details"><button class="package-choice interior" id='package-1'>
                     General Wash
                 </button></a>
-                <a href="#package-details"><button class="package-choice exterior">
+                <a href="#package-details"><button class="package-choice interior" id='package-2'>
                     Exterior Detail
                 </button></a>
-                <a href="#package-details"><button class="package-choice combination">
+                <a href="#package-details"><button class="package-choice interior" id='package-3'>
                     Interior Detail
                 </button></a>
-                <a href="#package-details"><button class="package-choice combination">
+                <a href="#package-details"><button class="package-choice exterior" id='package-4'>
                     Full Detail
                 </button></a>
+                
             </div>
         </div>
         <h5 class="package-name"></h5>
@@ -193,16 +195,47 @@
         </div>
     </div>
     </div>
+    
 </section>
 
-    <section class="_client">
 
-    </section>
+    
+    <div class='_client'>
+        <div class='_container' id='customer-schedule'></div>
+        
+        <div class='_apptContainer'></div>
+    </div>
 
-<section class="footer">
+    <div class='_orderContainer'>
 
+    </div>
+
+    
 </section>
-</section>
+
+<footer>
+    <div class='footer-container'>
+
+        <div class="social-media">
+            <div class="social-media-link">
+                <a href='#'><img src='../resources/images/twitter.svg' alt='twitter link'></a>
+            </div>
+            <div class="social-media-link">
+                <a href='#'><img src='../resources/images/instagram.svg' alt='instagram link'></a>
+            </div>
+            <div class="social-media-link">
+                <a href='#'><img src='../resources/images/facebook.svg' alt='facebook link'></a>
+            </div>
+        </div>
+
+        <div class="site-author">
+            <a href='https://github.com/skinnerap' class='port-link'>Visit my Portfolio</a>
+            <span class='author'>This website was built by Alexander P Skinner of Richmond, VA - 2020</span>
+            <span class='author'>Scheduling Software built by Alexander P Skinner of Richmond, VA - 2020</span>
+        </div>
+
+    </div>
+</footer>
 <script src="../resources/scripts/covid.js"></script>
 <script src="../resources/scripts/navi.js"></script>
 <script src="../resources/scripts/packages.js"></script>

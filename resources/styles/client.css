@@ -1,0 +1,151 @@
+._client {
+    padding-top: 0;
+    padding-right: 10vh;
+    padding-left: 10vh;
+    padding-bottom: 5vh;
+}
+
+._container {
+    text-align: center;
+}
+
+._apptContainer {
+    margin: 5vh;
+}
+
+._orderContainer {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+}
+
+.public-appt-btn {
+    display: inline-block;
+    padding: 2vh 1.5vh;
+    margin: 2vh 2vh;
+    background-image: linear-gradient(to top right, #4462da, #4a4cd3,rgb(59, 115, 219));
+    color: rgb(230, 228, 228);
+    border: none;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+}
+
+.public-appt-date {
+    margin: 0 auto;
+    font-size: 2.5rem;
+    font-weight: 500;
+    text-align: center;
+    color: #303030;
+    padding-bottom: 2vh;
+    padding-top: 2vh;
+}
+
+.user-date-form {
+    margin: 0 auto;
+    font-size: 1.5rem;
+    letter-spacing: .2rem;
+    text-transform: uppercase;
+}
+
+.user-btn {
+    display: inline-block;
+    padding: 2vh 1.5vh;
+    margin: 1vh 1vh;
+    background-image: linear-gradient(to right, #2e8dfa, #205bff);
+    color: #fff;
+    border: none;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+}
+
+.addOn-choice, .addOn-choice-a {
+    display: flexbox;
+    color: #000;
+    padding-right: 2vh;
+}
+
+.addOn-choice-submit {
+    display: block;
+    color: #fff;
+    background-image: linear-gradient(to bottom right, rgb(255, 57, 133), rgb(243, 43, 76));
+    text-align: center;
+    margin: 0 auto;
+    border: none;
+    padding: 2vh 2.5vh;
+    margin-top: 4vh;
+    border-radius: 20px;
+}
+
+.wantAddons {
+    font-size: 2rem;
+    color: #4a4cd3;
+    margin-top: 5vh;
+    margin-bottom: 2vh;
+}
+
+.order-date, .order-time, .order-pPrice, .order-pName, .order-aPrice, .order-aName, .order-subtotal, .order-aTotalPrice {
+    font-size: 1.7rem;
+    
+    color: #303030;
+
+}
+
+.order-colorChange {
+    font-size: 2rem;
+    color: #4766ce;
+}
+
+.order-confirmation-details, .order-customer-details, .order-submit-payment {
+    display: inline-grid;
+}
+
+.collect-customer-details {
+    text-align: end;
+    padding-right: 15%;
+    font-size: 1.5rem;
+    color: #4a4cd3;
+}
+
+.order-customer-details {
+    padding-bottom: 8vh;
+}
+
+.submit-customer-details {
+    margin-top: 2vh;
+    background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(7,121,222,1) 0%, rgba(20,72,140,1) 90% );
+    color: #fff;
+    border: none;
+    padding: 2vh;
+    border-radius: 20px;
+}
+
+@media all and (max-width: 460px) {
+    ._client {
+        padding: 0;
+    }
+
+    ._apptContainer {
+        margin: 0;
+    }
+
+    ._orderContainer {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .order-confirmation-details {
+        margin-bottom: 8vh;
+    }
+
+    .collect-customer-details {
+        font-size: 1.2rem;
+        padding: 0;
+        text-align: right;
+        padding-right: 2vh;
+        
+    }
+
+    .public-appt-btn {
+        margin-right: 4vh;
+    }
+
+}

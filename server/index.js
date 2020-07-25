@@ -111,6 +111,7 @@ app.get('/apptSlots', (req, res) => {
 });
 
 app.get('/apptSlots/:date', (req, res) => {
+    console.log(req.params.date);
     apptSlots.find({"date": req.params.date}).then(a => {
         res.json(a);
     })
@@ -253,6 +254,7 @@ app.post('/blockedDays', (req, res) => {
 app.post('/indBlockedDays', (req, res) => {
     const indDayObj = {
         day: req.body.day.toString(),
+        numDay: req.body.dayNumbered.toString(),
         type: req.body.type.toString()
     }
 
@@ -270,7 +272,9 @@ app.post('/apptSlots', (req, res) => {
 
 /******************* UPDATE ROUTES ***********************************/
 
-// UPDATES APPOINTMENT SLOT WHEN APPOINTMENT SLOT IS BOOKED FOR SERVICE
+// UPDATES APPOINTMENT SLOT WHEN APPOINTMENT SLOT IS BOOKED FOR SERVICE OR BLOCKED BY ADMIN
+// Note: When admin wants to use this route to block appointment slots the passed concurrency
+//       parameter should be '1'. This ensures it will be updated as '0' when patched in DB
 app.patch('/apptSlots/:date/:hour/:concurrency', async (req, res) => {
 
     const date = req.params.date;
@@ -287,6 +291,33 @@ app.patch('/apptSlots/:date/:hour/:concurrency', async (req, res) => {
         });
 
 });
+
+// UPDATES APPOINTMENT SLOTS CONCURRENCY TO '0' WHEN ADMIN BLOCKS A DAY OF THE WEEK
+app.patch('/apptSlots/:dayOfWeek', async (req, res) => {
+
+    apptSlots.update({"dayOfWeek": req.params.dayOfWeek}, {$set : {"concurrency": '0'}}, { multi: true }).then(a => {
+        console.log(a);
+        res.json(a);
+    }).catch(err => {
+        console.log(err);
+        res.send(err);
+    });
+
+})
+
+// UPDATES APPOINTMENT SLOTS CONCURRENCY TO THE SETTINGS.CONCURRENCY WHEN ADMIN RESTORES A DAY OF WEEK
+app.patch('/apptSlots/:dayOfWeek/:concurrency', async (req, res) => {
+
+    apptSlots.update({"dayOfWeek": req.params.dayOfWeek}, {$set : {"concurrency": req.params.concurrency}}, { multi: true })
+    .then(a => {
+        console.log(a);
+        res.json(a);
+    }).catch(err => {
+        console.log(err);
+        res.send(err);
+    });
+
+})
 
 
 
