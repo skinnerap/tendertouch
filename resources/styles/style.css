@@ -120,7 +120,7 @@ body {
     background-image: linear-gradient(to bottom right, rgba(0, 65, 106, .85), rgba(228, 229, 230, .55)), url("../Images/hero1.jpeg");
     background-position: top;
     background-size: cover;
-    clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+    /*clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);*/
     position: relative;
 }
 
@@ -847,10 +847,9 @@ body {
     margin-bottom: 10vh;
 }
 
-footer {
-    background-image: radial-gradient( circle 691px at 23.3% 17.5%,  rgba(241,122,59,0.91) 0%, rgba(249,224,196,1) 72.3% );
+#footer {
+    background-image: linear-gradient(to bottom right,  #1b0805, #531717 );
     width: 100%;
-    min-height: 20vh;
     box-sizing: unset;
     padding: 0;
     margin: 0;
@@ -859,19 +858,20 @@ footer {
 
 .footer-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 2vh;
-    color: rgb(54, 54, 54);
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 5vh;
+    color: #e6e6e6;
     font-size: 1rem;
     font-weight: 300;
     text-transform: uppercase;
     text-align: center;
     vertical-align: center;
+    line-height: 2rem;
 }
 
 .port-link {
     display: block;
-    color: rgb(172, 86, 5);
+    color: rgb(214, 83, 83);
     text-decoration: none;
 }
 
@@ -880,20 +880,32 @@ footer {
 }
 
 .social-media img {
-    width: 10vh;
+    width: 7vh;
+    vertical-align: middle;
 }
 
 .social-media-link {
     display: inline-block;
-    padding: 5vh;
+    margin-top: 5vh;
+    margin-right: 5vh;
 }
 
 .site-author {
-    margin-top: 6vh;
+    margin-top: 1vh;
 }
 
 .author {
     display: block;
+}
+
+.company img {
+    height: 150px;
+}
+
+.helper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
 }
 
 @media all and (max-width: 460px) {
@@ -914,5 +926,19 @@ footer {
     .site-author {
         padding: 2vh;
         margin-top: 0;
+    }
+
+    #Car, #Truck, #SUV {
+        margin-bottom: 1vh;
+    }
+
+    #SUV {
+        margin-bottom: 2vh;
+    }
+
+    .user-packer-choice {
+        line-height: 5rem;
+        padding-bottom: 3vh;
+        padding-top: 3vh;
     }
 }

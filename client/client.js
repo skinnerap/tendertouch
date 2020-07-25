@@ -361,12 +361,13 @@ p1.addEventListener('click', async () => {
 
     const baseName = p1.textContent.trim();
     
-
     const typeCar = document.querySelector('#Car');
     const typeTruck = document.querySelector('#Truck');
     const typeSUV = document.querySelector('#SUV');
 
     typeCar.addEventListener('click', async () => {
+
+        document.querySelector('.wantAddons').textContent = 'Add Optional Upgrades';
 
         const typeName = typeCar.id;
         const name = baseName + ' - ' +  typeName;
@@ -417,6 +418,8 @@ p1.addEventListener('click', async () => {
 
     typeTruck.addEventListener('click', async () => {
 
+        document.querySelector('.wantAddons').textContent = 'Add Optional Upgrades';
+
         const typeName = typeTruck.id;
         const name = baseName + ' - ' +  typeName;
 
@@ -465,6 +468,8 @@ p1.addEventListener('click', async () => {
     });
 
     typeSUV.addEventListener('click', async () => {
+
+        document.querySelector('.wantAddons').textContent = 'Add Optional Upgrades';
 
         const typeName = typeSUV.id;
         const name = baseName + ' - ' +  typeName;
@@ -526,6 +531,8 @@ p2.addEventListener('click', async () => {
 
     typeCar.addEventListener('click', async () => {
 
+        document.querySelector('.wantAddons').textContent = 'Add Optional Upgrades';
+
         const typeName = typeCar.id;
         const name = baseName + ' - ' +  typeName;
 
@@ -575,6 +582,8 @@ p2.addEventListener('click', async () => {
 
     typeTruck.addEventListener('click', async () => {
 
+        document.querySelector('.wantAddons').textContent = 'Add Optional Upgrades';
+
         const typeName = typeTruck.id;
         const name = baseName + ' - ' +  typeName;
 
@@ -623,6 +632,8 @@ p2.addEventListener('click', async () => {
     });
 
     typeSUV.addEventListener('click', async () => {
+
+        document.querySelector('.wantAddons').textContent = 'Add Optional Upgrades';
 
         const typeName = typeSUV.id;
         const name = baseName + ' - ' +  typeName;
@@ -675,6 +686,8 @@ p2.addEventListener('click', async () => {
 
 p3.addEventListener('click', async () => {
 
+    
+
     const baseName = p3.textContent.trim();
     
 
@@ -683,6 +696,8 @@ p3.addEventListener('click', async () => {
     const typeSUV = document.querySelector('#SUV');
 
     typeCar.addEventListener('click', async () => {
+
+        document.querySelector('.wantAddons').textContent = 'Add Optional Upgrades';
 
         const typeName = typeCar.id;
         const name = baseName + ' - ' +  typeName;
@@ -733,6 +748,8 @@ p3.addEventListener('click', async () => {
 
     typeTruck.addEventListener('click', async () => {
 
+        document.querySelector('.wantAddons').textContent = 'Add Optional Upgrades';
+
         const typeName = typeTruck.id;
         const name = baseName + ' - ' +  typeName;
 
@@ -781,6 +798,8 @@ p3.addEventListener('click', async () => {
     });
 
     typeSUV.addEventListener('click', async () => {
+
+        document.querySelector('.wantAddons').textContent = 'Add Optional Upgrades';
 
         const typeName = typeSUV.id;
         const name = baseName + ' - ' +  typeName;

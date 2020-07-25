@@ -83,8 +83,8 @@
 }
 
 .order-date, .order-time, .order-pPrice, .order-pName, .order-aPrice, .order-aName, .order-subtotal, .order-aTotalPrice {
-    font-size: 1.7rem;
-    
+    font-size: 1.3rem;
+    font-weight: 300;
     color: #303030;
 
 }

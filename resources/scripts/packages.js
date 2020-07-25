@@ -65,7 +65,7 @@ packageChoice.forEach(el => {
                 <li class='package-item'>
                     Windows
                 </li>
-                <h4 class='wantAddons'>Add Optional Upgrades</h4>
+                <h4 class='wantAddons'></h4>
 
                 <form class='addOn-form' id='addOn-form-generalwash'></form>
             `;
@@ -93,7 +93,7 @@ packageChoice.forEach(el => {
                 <li class='package-item'>
                     Engine Compartment Cleaned
                 </li>
-                <h4 class='wantAddons'>Add Optional Upgrades</h4>
+                <h4 class='wantAddons'></h4>
 
                 <form class='addOn-form' id='addOn-form-exteriordetail'></form>
             `;
@@ -121,7 +121,7 @@ packageChoice.forEach(el => {
                 <li class='package-item'>
                     Shampoo Carpets and Seats
                 </li>
-                <h4 class='wantAddons'>Add Optional Upgrades</h4>
+                <h4 class='wantAddons'></h4>
 
                 <form class='addOn-form' id='addOn-form-interiordetail'></form>
             `;
