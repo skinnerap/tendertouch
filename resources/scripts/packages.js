@@ -28,9 +28,9 @@ packageChoice.forEach(el => {
             packageText.innerHTML = `
                 <h5 class='user-packer-choice'> Select Vehicle </h5>
 
-                <a href='#customer-schedule'><button class='btn' id='Car'>Car</button></a>
-                <a href='#customer-schedule'><button class='btn' id='Truck'>Truck</button></a>
-                <a href='#customer-schedule'><button class='btn' id='SUV'>SUV / Van</button></a>
+                <button class='btn' id='Car'>Car</button>
+                <button class='btn' id='Truck'>Truck</button>
+                <button class='btn' id='SUV'>SUV / Van</button>
 
                 <li class='package-item'>
                     Interior Vacuum

@@ -5,6 +5,7 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
     <title>A Tender Touch Mobile Auto Detailing</title>
 
+    <script src="https://js.stripe.com/v3/"></script>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Oswald:wght@200;300;400;500;700&display=swap" rel="stylesheet">
     <link href="../resources/styles/style.css" type="text/css" rel="stylesheet">
     <link href='../resources/styles/client.css' type='text/css' rel='stylesheet'>
@@ -23,23 +24,26 @@
             <a href="#" class="navi-link tracking-in-contract-bck" id="home-link">Home</a>
         </li>
         <li class="navi-item">
+            <a href="#info-link" class="navi-link tracking-in-contract-bck">How it Works</a>
+        </li>
+        <li class="navi-item">
             <a href="#start-scheduling" class="navi-link tracking-in-contract-bck">Packages</a>
         </li>
         <li class="navi-item">
-            <a href="#start-scheduling" class="navi-link tracking-in-contract-bck">Schedule</a>
+            <a href="#start-scheduling" class="navi-link tracking-in-contract-bck">Schedule Now</a>
         </li>
         <li class="navi-item">
-            <a href="#info-link" class="navi-link tracking-in-contract-bck">More Info</a>
+            <a href="#gallery" class="navi-link tracking-in-contract-bck">Gallery</a>
         </li>
         <li class="navi-item">
-            <a href="#" class="navi-link tracking-in-contract-bck">Contact</a>
+            <a href="#contact" class="navi-link tracking-in-contract-bck">Contact</a>
         </li>
     </ul>
 </div>
 
 <div class="phone-box bounce-in-top">
     <p class="phone-word">Questions?</p>
-    <a href="tel:999-999-9999" alt="Call us at 999-999-9999" class="phone-link"><span class="phone-char">(</span>99<span class="phone-char">9)</span> 99<span class="phone-char">9 -</span> 9999</a>
+    <a href="tel:804-401-5837" alt="Call us at 804-401-5837" class="phone-link"><span class="phone-char">(</span>80<span class="phone-char">4)</span> 40<span class="phone-char">1 -</span> 5837</a>
 </div>
 <section class="home-page">
 <header class="header">
@@ -98,8 +102,9 @@
                 Affordable
             </span>
             <span class="primary-heading-bottom">
-                Mobile Auto Detailing Service
+                Tender Touch Mobile <span class='headerBlock'>Auto Detailing Service</span>
             </span>
+            
         </h1>
     </div>
 
@@ -165,7 +170,7 @@
             (Click an option)
         </p>
         <p class="package-instruction">
-            <em>*Discounts available for multiple vehicles</em>
+            <em>*Discounts available for multiple vehicles, please call at <a href="tel:804-401-5837" alt="Call us at 804-401-5837" class="phone-packages">(804) 401 - 5837</a></em>
         </p>
         <div class="row">
             <div class="package-buttons">
@@ -206,11 +211,59 @@
         <div class='_apptContainer'></div>
     </div>
 
-    <div class='_orderContainer'>
+    <div class='_orderContainer' id='orderFormLink'>
+
+    </div>
+
+    <div class='_paymentContainer' id='stripePaymentForm'>
+
+    </div>
+
+    <div class='_orderConfirmation'>
 
     </div>
 
     
+</section>
+
+<section class='contact'>
+
+    <div class="contact-container" id='contact'>
+
+        <h3 class='contact-header'>Contact Us</h3>
+        <p class='contact-phone'>Phone: <a href="tel:804-401-5837" alt="Call us at 804-401-5837" class="phone-packages">(804) 401 - 5837</a></p>
+        <p class='contact-phone'>Email: <a href="mailto: aTenderTouchDetailing@gmail.com" alt="Send us an email at aTenderTouchDetailing@gmail.com" class="phone-packages">aTenderTouchDetailing@gmail.com</a></p>
+        <p class='contact-phone contact-spacer'>Business Hours: 
+            <ul class='contact-ul'>
+                <li class='contact-li'>Sunday: Closed</li>
+                <li class='contact-li'>Monday: 8 am - 4:30 pm</li>
+                <li class='contact-li'>Tuesday: 8 am - 4:30 pm</li>
+                <li class='contact-li'>Wednesday: 8 am - 4:30 pm</li>
+                <li class='contact-li'>Thursday: 8 am - 4:30 pm</li>
+                <li class='contact-li'>Friday: 8 am - 4:30 pm</li>
+                <li class='contact-li'>Saturday: 8 am - 4 pm</li>
+            </ul>
+        </p>
+
+    </div>
+
+</section>
+
+<section class='work-gallery'>
+
+    <div class="gallery-container">
+        
+        <h3 class='gallery-header' id='gallery'>Check Out Our Work</h3>
+
+        <div class='gallery-img-container'>
+
+            <!-- INSERT IMAGES -->
+            <button class='load-images'>Click Here to See Images</button>
+
+        </div>
+
+    </div>
+
 </section>
 
 <footer id='footer'>
@@ -218,31 +271,42 @@
 
         <div class="social-media">
             <div class="social-media-link">
-                <a href='#'><span class='helper'></span><img src='../resources/images/svgs/icons8-twitter.svg' alt='twitter link'></a>
+                <a href='#'><span class='helper'></span><img src='../resources/images/twitter.png' alt='twitter link'></a>
             </div>
             <div class="social-media-link">
-                <a href='#'><span class='helper'></span><img src='../resources/images/svgs/icons8-instagram.svg' alt='instagram link'></a>
+                <a href='#'><span class='helper'></span><img src='../resources/images/fb.png' alt='instagram link'></a>
             </div>
             <div class="social-media-link">
-                <a href='#'><span class='helper'></span><img src='../resources/images/svgs/icons8-facebook.svg' alt='facebook link'></a>
+                <a href='#'><span class='helper'></span><img src='../resources/images/ig.png' alt='facebook link'></a>
             </div>
             <div class="social-media-link">
-                <a href='#'><span class='helper'></span><img src='../resources/images/svgs/icons8-play-button.svg' alt='youtube link'></a>
+                <a href='#'><span class='helper'></span><img src='../resources/images/yt.png' alt='youtube link'></a>
             </div>
         </div>
 
 
         <div class="site-author">
             <a href='#' class='port-link'>Home</a>
-            <a href='#contact' class='port-link'>Contact</a>
             <a href='#info-link' class='port-link'>Details</a>
             <a href='#start-scheduling' class='port-link'>Schedule</a>  
+            <a href="#gallery" class='port-link'>Gallery</a>
+            <a href='#contact' class='port-link'>Contact</a>
         </div>
 
         <div class="site-author">
+            <h6 class='footer-details-header'>Contact Info</h6>
+            <ul class='footer-details-ul'>
+                <li class='footer-details-li'>Open Monday - Saturday</li>
+                <li class='footer-details-li'>8:00 AM - 4:30 PM</li>
+                <li class='footer-details-li'><a href='tel: 804-401-5837'>(804) 401 - 5837</a></li>
+                <li class='footer-details-li'><a href='mailto: aTenderTouchDetailing@gmail.com'>aTenderTouchDetailing@gmail.com</a></li>
+            </ul>
+        </div>
+
+        <div class="site-author" id='rights'>
+            <span class='author' id='rights-1'>A Tender Touch Mobile Auto Detailing, All Rights Reserved</span>
+            <span class='author' id='rights-2'>Website and Software created by Alexander P Skinner</span>
             <a href='https://github.com/skinnerap' class='port-link' target='_blank'>Portfolio</a>
-            <span class='author'>Website and Software created by Alexander P Skinner</span>
-            <span class='author'>A Tender Touch Mobile Auto Detailing, All Rights Reserved</span>
         </div>
 
         
@@ -252,6 +316,7 @@
 <script src="../resources/scripts/covid.js"></script>
 <script src="../resources/scripts/navi.js"></script>
 <script src="../resources/scripts/packages.js"></script>
+<script src="../resources/scripts/loadImages.js"></script>
 <script src="client.js"></script>
 </body>
 </html>

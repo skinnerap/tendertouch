@@ -40,6 +40,7 @@ const API_URL_SETTINGS = 'http://localhost:5000/settings';
 const API_URL_BLOCKDAY = 'http://localhost:5000/blockedDays';
 const API_URL_BLOCKDAYIND = 'http://localhost:5000/indBlockedDays';
 const API_URL_APPTSLOTS = 'http://localhost:5000/apptSlots';
+const API_URL_JOBS = 'http://localhost:5000/jobs';
 
 
 
@@ -63,8 +64,13 @@ function ApptSlot(year, month, dayOfMonth, hour, concurrency) {
 
 /************* SETTINGS ****************/
 
+// TO DO: Check if appointment slots are already created,
+//        if so, grab the future booked jobs and decrement
+//        newly created appointment slots appropriately 
+//        in tandem with the new settings.
+
 // On Click of General Settings Submit Button
-createNewSettings.addEventListener('click', (event) => {
+createNewSettings.addEventListener('click', async (event) => {
     // Prevents the default behaviour of submission by browser
     event.preventDefault();
 
@@ -92,12 +98,22 @@ createNewSettings.addEventListener('click', (event) => {
         headers: {
             'content-type': 'application/json'
         }
-    }).then(response => response.json()
-        .then(settingsObj => {
-            console.log(settingsObj);
-
+    }).then(async response => await response.json()
+        .then(async settingsObj => {
             // Resets the Form Data
             settingsForm.reset();
+
+            // Check if appointment slots are already stored in DB
+            // If so, create new appointment slots
+            if(apptsAreStored()) {
+                /*const settings = await getSettings();
+                console.log(settings);
+                const blockedDates = await getBlockedDates();
+                console.log(blockedDates);
+                const blockedDays = await getBlockedDaysOfWeek();
+                console.log(blockedDays);*/          
+                //createAppointments(settings, blockedDates, blockedDays, bookedSlots);
+            }
 
             // Confirmation of Success to Admin
             const confirm = document.querySelector('#settings-submission');
@@ -769,17 +785,17 @@ async function displayBlockedDaysOfWeek() {
 /**************************** APPOINTMENT SLOTS *************************************/
 
 // On Click of Create Appointments
-createApptsBtn.addEventListener('click', () => {
-    createAppointments();
-});
-
-// Creates Appointment Availability
-async function createAppointments() {
-
+createApptsBtn.addEventListener('click', async () => {
     // Retrieve neccessary data
     const settings = await getSettings();
     const blockedDates = await getBlockedDates();
     const blockedDaysOfWeek = await getBlockedDaysOfWeek();
+    const futureJobs = await getFutureJobs();
+    createAppointments(settings, blockedDates, blockedDaysOfWeek, futureJobs);
+});
+
+// Creates Appointment Availability
+async function createAppointments(settings, blockedDates, blockedDaysOfWeek, bookedSlots) {
 
     const dayOfWeekIndexed = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
@@ -887,15 +903,17 @@ async function createAppointments() {
                         mon = (j+1).toString();
                     }
 
-                    // If this is not a blocked date or blocked day of week
+                    // If this is a blocked date or blocked day of week
                     if((bSet.has(thisDate) || blockedDaysOfWeekSet.has(thisDay.getDay()))) {
-                        // Setting available appointment slot
+                        // Setting unavailable appointment slot
                         const a = new ApptSlot(i, mon, thisDaysDay, m, 0);
                         appointmentArr.push(a);
-                    // If it is a blocked date or blocked day of week
+                    // If it is not a blocked date or blocked day of week
                     } else {
-                        // Setting 'Concurrency' to zero to indicate the appointment is
-                        // blocked and therefore unavailable
+
+                        // Check if this slot has already been booked
+
+                        // Setting available appointment slot
                         const a = new ApptSlot(i, mon, thisDaysDay, m, concurrency);
                         appointmentArr.push(a);
                     }
@@ -1094,6 +1112,102 @@ async function getCurrentConcurrency() {
 
 }
 
+async function getFutureJobs() {
+
+    // Get current date and format it to replicate job.date
+    const dateObj = new Date();
+    const year = parseInt(dateObj.getFullYear());
+    const month = parseInt(dateObj.getMonth()) + 1;
+    const day = parseInt(dateObj.getDate());
+    
+    // Get all jobs from current date
+    const jobs = await fetchJobs(year, month, day);
+
+    return jobs;
+
+}
+
+async function fetchJobs(year, month, day) {
+    let result = [];
+    fetch(API_URL_JOBS + '/' + year + '/' + month + '/' + day).then(res => res.json())
+    .then(jobs => {
+        console.log('fetched jobs: ');
+        console.log(jobs);
+        jobs.forEach(job => {
+            // Convert all jobs into date/hour/estimatedTime obj
+            result.push({date: job.date, hour: job.time, estTime: job.estTime});
+        });
+    }).catch(err => {
+        throw new Error(err);
+    }).finally(()=> {
+        console.log(result);
+        return result;
+    });
+}
+
+async function getBookedSlots(jobs) {
+    
+    /*const obj = {
+        year: ,
+        month: ,
+        day: ,
+        hour: ,
+        amtToDecrement: 
+    }*/
+
+    console.log('jobs: ')
+    console.log(jobs);
+
+    let set = new Set();
+    
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
+                'Oct', 'Nov', 'Dec'];
+
+    jobs.forEach(job => {
+        const year = parseInt(job.date.split(' ')[3]);
+        const day = parseInt(job.date.split(' ')[2]);
+        const month = months.indexOf(job.date.split(' ')[1]) + 1;
+            
+        let hour = '';
+        if(job.hour.split(' ')[1] === 'AM') {
+            hour = parseFloat(job.hour.split(' ')[0]);
+            
+        } else {
+            if(job.hour.split(' ')[0] === '12:00' || job.hour.split(' ')[0] === '12:30') {
+                hour = parseFloat(job.hour.split(' ')[0]);
+            } else {
+                hour = parseFloat(job.hour.split(' ')[0]) + 12; 
+            }
+        }
+
+        if(!(hour % hour === 0)) hour = hour + .5;
+
+        const cycles = job.estTime / 30;
+        console.log(cycles);
+        hour = hour - .5;
+        for(let i=0; i<cycles; i++) {
+
+            hour = hour + .5;
+            const obj = {
+                year: year,
+                month: month,
+                day: day,
+                hour: hour,
+                amtToDec: 1
+            }
+
+            if(set.has(obj)) {
+                set[obj].amtToDec++;
+            } else {
+                set.add(obj);
+            }
+
+        }
+            
+    });
+
+    return set;
+}
 
 
 /************************ HELPERS - WORKING WITH DATES ******************************/
@@ -1109,8 +1223,5 @@ function startAtNextHour(minutes) {
     return true;
 }
 
-
-
-
-/******************* INITIALIZATION *************************/
+/************************* INITIALIZATION ******************************/
 displaySettings();

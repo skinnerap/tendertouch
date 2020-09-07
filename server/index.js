@@ -1,20 +1,33 @@
+if(process.env.NODE_ENV !== 'production') {
+    const env = require('dotenv');
+    env.config();
+}
+
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+const stripePublicKey = process.env.STRIPE_PUBLIC_KEY;
+const webhookSecret = process.env.WEBHOOK_SECRETY_KEY;
+const twilioSID = process.env.TWILIO_SID;
+const twilioToken = process.env.TWILIO_TOKEN;
+
+
+
 /********************** IMPORTS **************************************/
 const express = require('express');
 const cors = require('cors');
 const monk = require('monk');
 const morgan = require('morgan');
-
-
+const stripe = require('stripe')(stripeSecretKey);
+const bodyParser = require('body-parser');
+const twilio = require('twilio');
 
 const app = express();
-
-// db: holds database
 const db = monk('localhost/att');
+const sms = new twilio(twilioSID, twilioToken);
+
 
 
 
 /****************** MONGO COLLECTIONS ******************************/
-const xyz = db.get('/');
 const packs = db.get('packages');
 const adds = db.get('addons');
 const genSettings = db.get('settings');
@@ -24,20 +37,177 @@ const apptSlots = db.get('apptSlots');
 const deletedApptSlots = db.get('deletedApptSlots');
 const jobs = db.get('jobs');
 
+// only use the raw bodyParser for webhooks
+app.use((req, res, next) => {
+    if (req.originalUrl === '/webhook') {
+        next();
+    } else { 
+        express.json({limit: '50mb'})(req, res, next);
+    }
+});
+
 app.use(cors());
-app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({limit: '50mb'}));
+//app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb', extended: true}));
 
 
 
-/********************* GET ROUTES **********************************/
-app.get('/', (req, res) => {
-    const id = req.params.id;
-    xyz.find({}).then(p => {
-        res.json(p);
+// This section needs to be adjusted if the stripe price id's are adjusted in the stripe dashboard
+/****************** STRIPE PRICE ID's  *****************************/
+
+const stripeIds = {
+
+    'General Wash - Car' : 40,
+    'General Wash - Truck' : 60,
+    'General Wash - SUV' : 60,
+    'Interior Detail - Car' : 100,
+    'Interior Detail - Truck' : 125,
+    'Interior Detail - SUV' : 125,
+    'Exterior Detail - Car' : 100,
+    'Exterior Detail - Truck' : 125,
+    'Exterior Detail - SUV' : 125,
+    'Full Detail - Car' : 160,
+    'Full Detail - Truck' : 180,
+    'Full Detail - SUV' : 180,
+    'Shampoo Floor and Seats' : 40,
+    'Condition Leather' : 40,
+    'Clean & Detail Surfaces' : 30,
+    'Hand Wax and Buff' : 30,
+    'Engine Compartment Cleaned' : 45,
+    'Chrome Shined' : 15,
+    'Rims Cleaned and Shined' : 15
+
+}
+
+const getPrices = (names) => {
+
+    console.log(names);
+
+    let total = 0;
+
+    const priceMap = {
+        'General Wash - Car' : 40,
+        'General Wash - Truck' : 60,
+        'General Wash - SUV' : 60,
+        'Interior Detail - Car' : 120,
+        'Interior Detail - Truck' : 145,
+        'Interior Detail - SUV' : 145,
+        'Exterior Detail - Car' : 100,
+        'Exterior Detail - Truck' : 125,
+        'Exterior Detail - SUV' : 125,
+        'Full Detail - Car' : 160,
+        'Full Detail - Truck' : 185,
+        'Full Detail - SUV' : 185,
+        'Shampoo Floor and Seats' : 40,
+        'Condition Leather' : 40,
+        'Clean & Detail Surfaces' : 40,
+        'Hand Wax and Buff' : 40,
+        'Engine Compartment Cleaned' : 45,
+        'Chrome Shined' : 25,
+        'Rims Cleaned and Shined' : 25
+    }
+
+    names.forEach(name => {
+        total += priceMap[name] * 100;
+    });
+
+    return total;
+
+}
+
+const chargeCustomer = async (customerId) => {
+    // Lookup the payment methods available for the customer
+    const paymentMethods = await stripe.paymentMethods.list({
+        customer: customerId,
+        type: "card"
+    });
+    // Charge the customer and payment method immediately
+    const paymentIntent = await stripe.paymentIntents.create({
+        amount: 1099,
+        currency: "usd",
+        customer: customerId,
+        payment_method: paymentMethods.data[0].id,
+        off_session: true,
+        confirm: true
+    });
+    if (paymentIntent.status === "succeeded") {
+        console.log("✅ Successfully charged card off session");
+    }
+}
+
+app.post("/create-payment-intent", async (req, res) => {
+
+    // Alternatively, set up a webhook to listen for the payment_intent.succeeded event
+    // and attach the PaymentMethod to a new Customer
+    const customer = await stripe.customers.create();
+
+    // Seperate the customer's email from the purchases in req.body (Email in index[0])
+    const email = req.body[0];
+    let purchases = [];
+    for(let i = 1; i < req.body.length; i++) {
+        purchases.push(req.body[i]);
+    }
+
+    // Create a PaymentIntent with the order amount and currency
+    const paymentIntent = await stripe.paymentIntents.create({
+        customer: customer.id,
+        setup_future_usage: 'off_session',
+        amount: getPrices(purchases),
+        currency: "usd",
+        receipt_email: email
+    });
+
+    res.send({
+        clientSecret: paymentIntent.client_secret
     });
 
 });
+ 
+app.get('/stripe-price/:name', async (req, res) => {
+
+    const key = req.params.name;
+
+    res.json(stripeIds[key]);
+
+});
+
+app.get('/stripe-key', (req, res) => {
+    res.json(stripePublicKey);
+});
+
+  
+// Stripe requires the raw body to construct the event
+app.post('/webhook', bodyParser.raw({type: 'application/json'}), (req, res) => {
+    const sig = req.headers['stripe-signature'];
+    
+  
+    let event;
+  
+    try {
+      event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+    } catch (err) {
+      // On error, log and return the error message
+      console.log(`❌ Error message: ${err.message}`);
+      return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    // Handle the checkout.session.completed event
+    if (event.type === 'checkout.session.completed') {
+        const session = event.data.object;
+        // Fulfill the purchase...
+        
+    }
+  
+    // Successfully constructed event
+    //console.log('✅ Success:', event.id);
+    //console.log(event);
+  
+    // Return a response to acknowledge receipt of the event
+    res.json({received: true});
+});
+
+
+/********************* GET ROUTES **********************************/
 
 app.get('/packages', (req, res) => {
     packs.find().then(packageObjs => {
@@ -111,7 +281,6 @@ app.get('/apptSlots', (req, res) => {
 });
 
 app.get('/apptSlots/:date', (req, res) => {
-    console.log(req.params.date);
     apptSlots.find({"date": req.params.date}).then(a => {
         res.json(a);
     })
@@ -123,25 +292,16 @@ app.get('/apptSlots/:date/:hour', (req, res) => {
     });
 });
 
-app.get('/apptSlots/:id', (req, res) => {
+/*app.get('/apptSlots/:id', (req, res) => {
     const id = req.params.id;
     apptSlots.find({"_id": id}).then(aSlot => {
         res.json(aSlot);
     });
-});
+});*/
 
 app.get('/jobs', (req, res) => {
     jobs.find({}).then(jobObjs => {
         res.json(jobObjs);
-    }).catch(err => {
-        console.log(err);
-        res.send(err);
-    });
-});
-
-app.get('/jobs/:id', (req, res) => {
-    jobs.find({"_id": req.params.id}).then(jobObj => {
-        res.json(jobObj);
     }).catch(err => {
         console.log(err);
         res.send(err);
@@ -163,6 +323,21 @@ app.get('/jobs/:date/:hour', (req, res) => {
         res.json(jobObj);
     }).catch(err => {
         console.log(err);
+        res.send(err);
+    });
+});
+
+app.get('/jobs/:year/:month/:day', (req, res) => {
+    const year = parseInt(req.params.year) - 1;
+    const month = parseInt(req.params.month) - 1;
+    const day = parseInt(req.params.day) - 1;
+    const date = new Date(year, month, day);
+    console.log(date);
+
+    jobs.find( {dateYear: {$gt : year} , dateDay: {$gt : month}, dateMonth: {$gt : day}} )
+    .then(jobs => {
+        res.json(jobs);
+    }).catch(err => {
         res.send(err);
     });
 });
@@ -269,6 +444,40 @@ app.post('/apptSlots', (req, res) => {
     });
 });
 
+app.post('/jobs', (req, res) => {
+
+    const businessNumber = '(999) 999 - 9999';
+    let phoneNumber = req.body.customer.phone;
+    if(phoneNumber[0] === '1') {
+        phoneNumber = '+' + phoneNumber;
+    } else {
+        phoneNumber = '+1' + phoneNumber;
+    }
+
+    // Cast all add-ons as a string for admin's SMS
+    let upgrades = '';
+    req.body.services.upgrades.forEach(upgrade => {
+        upgrades += ',' + upgrade + ' ';
+    });
+    
+
+    jobs.insert(req.body).then(a => {
+        res.json(a);
+    }); 
+
+    // Sends message to Admin to notify them about the new booked appointment
+    sms.messages.create({
+        //to: adminNumber
+        to: '+15403189312',
+        from: '+12523682210',
+        body: 'New Appointment Booked: ' + req.body.date + ' at ' + req.body.time + '. ' +
+              'Location: ' + req.body.location.address + ', ' + req.body.location.city +
+              ' ' + req.body.location.state + ', ' + req.body.location.zip + '. ' +
+              'Services: ' + req.body.services.package + ' ' + upgrades + '.'
+    });
+
+});
+
 
 /******************* UPDATE ROUTES ***********************************/
 
@@ -283,7 +492,6 @@ app.patch('/apptSlots/:date/:hour/:concurrency', async (req, res) => {
 
     apptSlots.update({"date": date, "hour": hour}, {$set : {"concurrency": concurrency}})
         .then(a => {
-            console.log(a);
             res.json(a);
         }).catch(err => {
             console.log(err);
@@ -296,7 +504,6 @@ app.patch('/apptSlots/:date/:hour/:concurrency', async (req, res) => {
 app.patch('/apptSlots/:dayOfWeek', async (req, res) => {
 
     apptSlots.update({"dayOfWeek": req.params.dayOfWeek}, {$set : {"concurrency": '0'}}, { multi: true }).then(a => {
-        console.log(a);
         res.json(a);
     }).catch(err => {
         console.log(err);
@@ -310,7 +517,18 @@ app.patch('/apptSlots/:dayOfWeek/:concurrency', async (req, res) => {
 
     apptSlots.update({"dayOfWeek": req.params.dayOfWeek}, {$set : {"concurrency": req.params.concurrency}}, { multi: true })
     .then(a => {
-        console.log(a);
+        res.json(a);
+    }).catch(err => {
+        console.log(err);
+        res.send(err);
+    });
+
+})
+
+app.patch('/jobs/:date/:hour', async (req, res) => {
+
+    jobs.update({"date": req.params.date, "hour": req.params.hour}, {$set : {"confirmed": true}})
+    .then(a => {
         res.json(a);
     }).catch(err => {
         console.log(err);

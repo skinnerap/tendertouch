@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Jobs</title>
+    <link href='../resources/styles/jobs.css' type='text/css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Oswald:wght@200;300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="header">Booked Appointments</h1>
+        <div class="getByDate">
+            <h2 class="subheader">Select Date</h2>
+            <form class="dateForm">
+                <label for='date' id='dateLabel'>Date:</label>
+                <input type="date" id='date' name='date'>
+                <input type='submit' class='submitDate'>
+            </form>
+        </div>
+        <div class="jobs">
+            <!-- Booked Appointments Inserted Here -->
+        </div>
+    </div>
+
+<script src='jobs.js'></script>
+    
+</body>
+</html>
